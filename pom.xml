@@ -53,6 +53,12 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/jfree/jfreechart -->
+		<dependency>
+		    <groupId>jfree</groupId>
+		    <artifactId>jfreechart</artifactId>
+		    <version>1.0.13</version>
+		</dependency>
 	</dependencies>
 
 	<build>
