@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.raman.location.entities.Location;
@@ -21,6 +22,10 @@ import com.raman.location.util.ReportUtil;
 @Controller
 public class LocationController {
 	
+	private static final String DISPLAY_LOCATIONS = "displayLocations";
+
+	private static final String LOCATIONS = "locations";
+
 	private Log logger = LogFactory.getLog(LocationController.class);
 
 	@Autowired
@@ -36,12 +41,12 @@ public class LocationController {
 	private ServletContext context;
 	
 	
-	@RequestMapping("/showCreate")
+	@RequestMapping(value = "/showCreate", method = RequestMethod.GET)
 	public String showCreate() {
 		return "createLocation";
 	}
 
-	@RequestMapping("/saveLoc")
+	@RequestMapping(value = "/saveLoc")
 	public String saveLocation(@ModelAttribute("location") Location location, ModelMap modelMap) {
 		Location locationSaved = service.saveLocation(location);
 		String msg = "Location saved with name: " + locationSaved.getName();
@@ -53,40 +58,40 @@ public class LocationController {
 		return "createLocation";
 	}
 
-	@RequestMapping("/displayLocations")
+	@RequestMapping(value = "/displayLocations", method = RequestMethod.GET)
 	public String displayLocations(ModelMap modelMap) {
 		List<Location> locations = service.getAllLocations();
-		modelMap.addAttribute("locations", locations);
-		return "displayLocations";
+		modelMap.addAttribute(LOCATIONS, locations);
+		return DISPLAY_LOCATIONS;
 	}
 
-	@RequestMapping("/deleteLocation")
+	@RequestMapping(value = "/deleteLocation")
 	public String deleteLocation(@RequestParam("id") int id, ModelMap modelMap) {
 		// Location location = service.getLocationById(id);
 		Location location = new Location();
 		location.setId(id);
 		service.deleteLocation(location);
 		List<Location> locations = service.getAllLocations();
-		modelMap.addAttribute("locations", locations);
-		return "displayLocations";
+		modelMap.addAttribute(LOCATIONS, locations);
+		return DISPLAY_LOCATIONS;
 	}
 
-	@RequestMapping("/showUpdate")
+	@RequestMapping(value = "/showUpdate", method = RequestMethod.GET)
 	public String showUpdate(@RequestParam("id") int id, ModelMap modelMap) {
 		Location location = service.getLocationById(id);
 		modelMap.addAttribute("location", location);
 		return "updateLocation";
 	}
 
-	@RequestMapping("/updateLoc")
+	@RequestMapping(value = "/updateLoc")
 	public String updateLocation(@ModelAttribute("location") Location location, ModelMap modelMap) {
 		service.updateLocation(location);
 		List<Location> locations = service.getAllLocations();
-		modelMap.addAttribute("locations", locations);
-		return "displayLocations";
+		modelMap.addAttribute(LOCATIONS, locations);
+		return DISPLAY_LOCATIONS;
 	}
 	
-	@RequestMapping("/generateReport")
+	@RequestMapping(value = "/generateReport", method = RequestMethod.GET)
 	public String generateReport() {
 		List<Object[]> data = service.findTypeAndTypeCount();
 		String path = context.getRealPath("/");
